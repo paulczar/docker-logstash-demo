@@ -1,0 +1,358 @@
+{
+  "title": "Apache Demo",
+  "rows": [
+    {
+      "title": "Options",
+      "height": "50px",
+      "editable": true,
+      "collapse": false,
+      "collapsable": true,
+      "panels": [
+        {
+          "loading": false,
+          "error": "",
+          "span": 5,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "timepicker",
+          "mode": "absolute",
+          "time_options": [
+            "5m",
+            "15m",
+            "1h",
+            "6h",
+            "12h",
+            "24h",
+            "2d",
+            "5d"
+          ],
+          "timespan": "5d",
+          "timefield": "@timestamp",
+          "index": "[logstash-]YYYY.MM.DD",
+          "defaultindex": "NOINDEX",
+          "index_interval": "day",
+          "refresh": {
+            "enable": false,
+            "interval": 30,
+            "min": 3
+          },
+          "status": "Stable",
+          "timeformat": "",
+          "time": {
+            "from": "07/06/2013 15:58:12",
+            "to": "07/07/2013 08:01:36"
+          }
+        },
+        {
+          "loading": false,
+          "error": false,
+          "span": 3,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "dashcontrol",
+          "save": {
+            "gist": false,
+            "elasticsearch": true,
+            "local": true,
+            "default": true
+          },
+          "load": {
+            "gist": true,
+            "elasticsearch": true,
+            "local": true
+          },
+          "hide_control": false,
+          "elasticsearch_size": 20,
+          "elasticsearch_saveto": "kibana-int",
+          "temp": true,
+          "temp_ttl": "30d",
+          "status": "Stable",
+          "hide": false
+        }
+      ]
+    },
+    {
+      "title": "Query",
+      "height": "50px",
+      "editable": true,
+      "collapse": false,
+      "collapsable": true,
+      "panels": [
+        {
+          "loading": false,
+          "error": false,
+          "span": 12,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "stringquery",
+          "label": "Search",
+          "query": "@type:apache",
+          "size": 100,
+          "sort": [
+            "_score",
+            "desc"
+          ],
+          "multi": false,
+          "multi_arrange": "horizontal",
+          "status": "Stable",
+          "history": [
+            "@type:apache"
+          ],
+          "remember": 10
+        }
+      ]
+    },
+    {
+      "title": "Analytics",
+      "height": "150px",
+      "editable": true,
+      "collapse": false,
+      "collapsable": true,
+      "panels": [
+        {
+          "loading": false,
+          "error": false,
+          "span": 3,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "map",
+          "status": "Beta",
+          "query": "@type:apache",
+          "map": "world",
+          "colors": [
+            "#A0E2E2",
+            "#265656"
+          ],
+          "size": 100,
+          "exclude": [],
+          "spyable": true,
+          "index_limit": 0,
+          "field": "@fields.geoip.country_code2",
+          "tooltip": "_id",
+          "style": {
+            "font-size": "10pt"
+          },
+          "arrangement": "vertical",
+          "chart": "none",
+          "counter_pos": "above",
+          "donut": false,
+          "tilt": false,
+          "labels": true,
+          "title": "World Map"
+        },
+        {
+          "loading": false,
+          "error": false,
+          "span": 3,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "pie",
+          "status": "Deprecating Soon",
+          "query": {
+            "field": "@fields.geoip.country_name",
+            "query": "*",
+            "goal": 1
+          },
+          "size": 10,
+          "exclude": [],
+          "donut": false,
+          "tilt": false,
+          "legend": true,
+          "labels": true,
+          "mode": "terms",
+          "default_field": "DEFAULT",
+          "spyable": true,
+          "title": "Country"
+        },
+        {
+          "loading": false,
+          "error": false,
+          "span": 3,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "pie",
+          "status": "Deprecating Soon",
+          "query": {
+            "field": "@fields.response",
+            "query": "@type:apache",
+            "goal": 1
+          },
+          "size": 10,
+          "exclude": [],
+          "donut": false,
+          "tilt": false,
+          "legend": true,
+          "labels": true,
+          "mode": "terms",
+          "default_field": "DEFAULT",
+          "spyable": true,
+          "title": "Response Code"
+        }
+      ]
+    },
+    {
+      "title": "Graph",
+      "height": "350px",
+      "editable": true,
+      "collapse": false,
+      "collapsable": true,
+      "panels": [
+        {
+          "loading": false,
+          "span": 12,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "histogram",
+          "query": [
+            {
+              "query": "@type:apache",
+              "label": "@type:apache"
+            }
+          ],
+          "interval": "10m",
+          "show": [
+            "points",
+            "lines",
+            "legend",
+            "x-axis",
+            "y-axis"
+          ],
+          "timezone": "browser",
+          "spyable": true,
+          "zoomlinks": true,
+          "fill": 0,
+          "linewidth": 2,
+          "bars": true,
+          "stack": true,
+          "points": false,
+          "lines": false,
+          "legend": true,
+          "x-axis": true,
+          "y-axis": true,
+          "status": "Stable",
+          "mode": "count",
+          "value_field": null,
+          "auto_int": true,
+          "resolution": 100,
+          "percentage": false,
+          "interactive": true
+        },
+        {
+          "loading": false,
+          "span": 0,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "hits",
+          "query": [
+            {
+              "query": "@type:apache",
+              "label": "@type:apache"
+            }
+          ],
+          "style": {
+            "font-size": "9pt"
+          },
+          "aggregate": false,
+          "arrangement": "horizontal",
+          "chart": true,
+          "counters": true,
+          "count_pos": "above",
+          "status": "Beta",
+          "counter_pos": "above",
+          "donut": false,
+          "tilt": false,
+          "labels": true
+        }
+      ]
+    },
+    {
+      "title": "Events",
+      "height": "350px",
+      "editable": true,
+      "collapse": false,
+      "collapsable": true,
+      "panels": [
+        {
+          "loading": false,
+          "error": false,
+          "span": 2,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "fields",
+          "style": {},
+          "arrange": "vertical",
+          "micropanel_position": "right",
+          "sort": [
+            "@timestamp",
+            "desc"
+          ],
+          "query": "@type:apache",
+          "status": "Beta"
+        },
+        {
+          "loading": false,
+          "error": false,
+          "span": 10,
+          "editable": true,
+          "group": [
+            "default"
+          ],
+          "type": "table",
+          "query": "@type:apache",
+          "interval": "1y",
+          "show": [
+            "bars",
+            "y-axis",
+            "x-axis",
+            "legend"
+          ],
+          "fill": 3,
+          "overflow": "min-height",
+          "timezone": "browser",
+          "spyable": true,
+          "zoomlinks": true,
+          "size": 50,
+          "pages": 10,
+          "offset": 0,
+          "sort": [
+            "@timestamp",
+            "desc"
+          ],
+          "style": {
+            "font-size": "9pt"
+          },
+          "fields": [
+            "@timestamp",
+            "@fields.geoip.country_name",
+            "@fields.request"
+          ],
+          "sortable": true,
+          "status": "Stable",
+          "highlight": [],
+          "header": true,
+          "paging": true
+        }
+      ]
+    }
+  ],
+  "editable": true,
+  "last": null
+}

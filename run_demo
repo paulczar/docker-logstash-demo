@@ -1,0 +1,34 @@
+#!/bin/bash
+
+IFACE=${IFACE:-"eth0"}
+
+MY_IP=$(ifconfig $IFACE | grep 'inet addr' | awk '{print $2}' | awk -F: '{print $2}')
+
+ES_ID=$(docker run -d paulczar/elasticsearch /opt/elasticsearch/bin/elasticsearch.sh)
+ES_PORT=9200
+ES_IP=$(docker inspect $ES_ID | grep IPAd | awk -F'"' '{print $4}')
+
+ES2_ID=$(docker run -d paulczar/elasticsearch /opt/elasticsearch/bin/elasticsearch.sh)
+ES2_PORT=9200
+ES2_IP=$(docker inspect $ES2_ID | grep IPAd | awk -F'"' '{print $4}')
+
+echo ElasticSearch:   $ES_ID    http://$ES_IP:$ES_PORT/_plugin/head/
+echo ElasticSearch2:  $ES2_ID   http://$ES2_IP:$ES2_PORT/_plugin/head/
+
+cat logstash.conf.template | sed "s/ES_IP/$ES_IP/" > logstash.conf
+
+LS_IMAGE=$(docker build . | tail -1 | awk '{print $3}')
+LS_ID=$(docker run -d $LS_IMAGE)
+LS_PORT=$(docker port $LS_ID 514)
+LS_IP=$(docker inspect $LS_ID | grep IPAd | awk -F'"' '{print $4}')
+
+echo Logstash:        $LS_ID    tcp://$MY_IP:$LS_PORT
+
+KB_ID=$(docker run -e ES_HOST=$ES_IP -e ES_PORT=$ES_PORT -p=80 -d paulczar/kibana /opt/kibana/bin/kibana.sh)
+KB_PORT=$(docker port $KB_ID 80)
+LS_IP=$(docker inspect $KB_ID | grep IPAd | awk -F'"' '{print $4}')
+
+echo Kibana:          $KB_ID    http://$MY_IP:$KB_PORT 
+
+echo send some sample syslog data:
+echo "tail -100 /var/log/syslog | nc $MY_IP $LS_PORT"

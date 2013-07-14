@@ -1,0 +1,60 @@
+input {
+  file { 
+    type => "apache"
+    path => ["/logstash/apache1.splunk.com/*.log","/logstash/apache2.splunk.com/*.log","/logstash/apache3.splunk.com/*.log"]
+    start_position => "beginning"
+  }
+#  file { 
+#    type => "mysql"
+#    path => ["/logstash/mysql.splunk.com/*.log"]
+#    start_position => "beginning"
+#  }
+  tcp {
+    type => "syslog"
+    port => "514"
+  }
+}
+
+filter {
+  grok {
+    type    => "syslog"
+    pattern => ["%{SYSLOGBASE}"]
+  }
+  date {
+    type  => "syslog"
+    match => [ 
+               "timestamp", 
+               "MMM dd YYY HH:mm:ss",
+               "MMM  d YYY HH:mm:ss",
+               "MMM  d HH:mm:ss",
+               "MMM dd HH:mm:ss",
+               "ISO8601"
+             ]
+  }
+
+  mutate {
+    type => "apache"
+    gsub => ["@message","^i",""]
+  }
+
+  grok {
+    type => "apache"
+    patterns_dir => ["/logstash/patterns"]
+    pattern => ["%{COMBINEDAPACHELOG}","%{SPLUNKAPACHELOG}"]
+  }  
+  date {
+    type => "apache"
+    match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z", "dd/MMM/yyyy:HH:mm:ss" ]
+  }
+  geoip {
+    type   => "apache"
+    source => "clientip"
+  }
+}
+
+output {
+  elasticsearch_http {
+    host => "ES_IP"
+    flush_size => 1
+  }
+}
