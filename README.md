@@ -24,13 +24,16 @@ _the first run can take some time while all the docker containers are downloaded
 
 ```
 $ IFACE=wlan0 ./run_demo
-ElasticSearch: a3a82234d17f http://172.16.42.236:9200/_plugin/head/
-ElasticSearch2: 8085bc53c804 http://172.16.42.237:9200/_plugin/head/
-Uploading context 20480 bytes
-Logstash: 1b456a69463f tcp://192.168.50.129:49266
-Kibana: 23b698ca79a1 http://192.168.50.129:49267
+ElasticSearch: a8d19d1044ae http://172.16.42.8:9200/_plugin/head/
+ElasticSearch2: 40d9db4e5c68 http://172.16.42.9:9200/_plugin/head/
+Uploading context 102400 bytes
+Logstash Syslog: 8bdbca2a67cb tcp://192.168.50.129:49278
+Logstash Apache: 8bdbca2a67cb tcp://192.168.50.129:49277
+Kibana: d7f3fe184438 http://192.168.50.129:49279
 send some sample syslog data:
-tail -100 /var/log/syslog | nc 192.168.50.129 49266
+tail -100 /var/log/syslog | nc 192.168.50.129 49278
+send some sample apache data:
+tail -100 /var/log/apache2/apache.log | nc 192.168.50.129 49277
 ```
 
 _note Kibana and Logstash expose ports via your IP to the outside world_

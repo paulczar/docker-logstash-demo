@@ -20,15 +20,20 @@ cat logstash.conf.template | sed "s/ES_IP/$ES_IP/" > logstash.conf
 LS_IMAGE=$(docker build . | tail -1 | awk '{print $3}')
 LS_ID=$(docker run -d $LS_IMAGE)
 LS_PORT=$(docker port $LS_ID 514)
+LS_PORT2=$(docker port $LS_ID 515)
 LS_IP=$(docker inspect $LS_ID | grep IPAd | awk -F'"' '{print $4}')
 
-echo Logstash:        $LS_ID    tcp://$MY_IP:$LS_PORT
+echo Logstash Syslog: $LS_ID    tcp://$MY_IP:$LS_PORT
+echo Logstash Apache: $LS_ID    tcp://$MY_IP:$LS_PORT2
+
 
 KB_ID=$(docker run -e ES_HOST=$ES_IP -e ES_PORT=$ES_PORT -p=80 -d paulczar/kibana /opt/kibana/bin/kibana.sh)
 KB_PORT=$(docker port $KB_ID 80)
-LS_IP=$(docker inspect $KB_ID | grep IPAd | awk -F'"' '{print $4}')
+KB_IP=$(docker inspect $KB_ID | grep IPAd | awk -F'"' '{print $4}')
 
 echo Kibana:          $KB_ID    http://$MY_IP:$KB_PORT 
 
 echo send some sample syslog data:
 echo "tail -100 /var/log/syslog | nc $MY_IP $LS_PORT"
+echo send some sample apache data:
+echo "tail -100 /var/log/apache2/apache.log | nc $MY_IP $LS_PORT2"

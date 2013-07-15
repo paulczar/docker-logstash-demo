@@ -4,21 +4,20 @@ input {
     path => ["/logstash/apache1.splunk.com/*.log","/logstash/apache2.splunk.com/*.log","/logstash/apache3.splunk.com/*.log"]
     start_position => "beginning"
   }
-#  file { 
-#    type => "mysql"
-#    path => ["/logstash/mysql.splunk.com/*.log"]
-#    start_position => "beginning"
-#  }
   tcp {
     type => "syslog"
     port => "514"
   }
+  tcp {
+    type => "apache"
+    port => "515"
+  }  
 }
 
 filter {
   grok {
     type    => "syslog"
-    pattern => ["%{SYSLOGBASE}"]
+    pattern => ["%{SYSLOGBASE} %{GREEDYDATA:detail}"]
   }
   date {
     type  => "syslog"
@@ -36,7 +35,6 @@ filter {
     type => "apache"
     gsub => ["@message","^i",""]
   }
-
   grok {
     type => "apache"
     patterns_dir => ["/logstash/patterns"]

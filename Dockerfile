@@ -31,6 +31,8 @@ ADD http://www.splunk.com/base/images/Tutorial/Sampledata.zip /logstash/sample.z
 RUN unzip /logstash/sample.zip -d /logstash/
 
 EXPOSE 514
+EXPOSE 515
+
 # Start logstash
 CMD ["/usr/bin/java", "-jar", "/opt/logstash/bin/logstash-1.1.13-flatjar.jar", "agent", "-f", "/logstash/logstash.conf", "-v"]
 
